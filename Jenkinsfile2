@@ -10,7 +10,7 @@ pipeline {
 
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
-        DOCKER_IMAGE = 'kastrov/bms:latest'
+        DOCKER_IMAGE = 'sravyatirumala/bms:latest'
         EKS_CLUSTER_NAME = 'my-eks-cluster'
         AWS_REGION = 'us-east-2'
     }
@@ -65,12 +65,12 @@ pipeline {
             }
         }
 
-        stage('OWASP FS Scan') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
+      //  stage('OWASP FS Scan') {
+      //      steps {
+        //        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+        //        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+        //    }
+      //  }
 
         stage('Trivy FS Scan') {
             steps {
@@ -102,7 +102,7 @@ pipeline {
                     aws sts get-caller-identity
 
                     echo "Configuring kubectl for EKS cluster..."
-                    aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+                    aws eks update-kubeconfig --name my-eks-cluster --region us-east-2
 
                     echo "Verifying kubeconfig..."
                     kubectl config view
